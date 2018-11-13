@@ -14,10 +14,17 @@ type Person struct {
 }
 
 func main() {
-	route := gin.Default()
+	route := gin.New()
+	/*gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
+		log.Printf("endpoint %v %v %v %v\n", httpMethod, absolutePath, handlerName, nuHandlers)
+	}*/
 	route.Use(Logger())
+	//route.Use(gin.Logger())
+	//route.Use(gin.Recovery())
 	route.GET("/testing", startPage)
 	route.Run(":8085")
+	//
+
 }
 
 func startPage(c *gin.Context) {
@@ -36,6 +43,7 @@ func startPage(c *gin.Context) {
 }
 
 //定义
+//记录请求历史记录，可以入库或es,或.log文件
 func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		t := time.Now()
@@ -53,6 +61,6 @@ func Logger() gin.HandlerFunc {
 
 		// access the status we are sending
 		status := c.Writer.Status()
-		log.Println(status)
+		log.Println("statuscode:",status)
 	}
 }
